@@ -7,10 +7,10 @@
   "keywords": "hubot, babyfoot",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hubot-scripts/hubot-babyfoot.git"
+    "url": "git://github.com/YuukanOO/hubot-babyfoot.git"
   },
   "bugs": {
-    "url": "https://github.com/hubot-scripts/hubot-babyfoot/issues"
+    "url": "https://github.com/YuukanOO/hubot-babyfoot/issues"
   },
   "dependencies": {},
   "peerDependencies": {
