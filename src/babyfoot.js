@@ -1,15 +1,28 @@
-module.exports = function(robot) {
+module.exports = function (robot) {
+  var leaveMessages = [
+    function (username) { return "Ca tombe bien, on voulait pas de toi! @" + username + " ."; },
+    function (username) { return "Non mais tu croyais qu'on voulait jouer avec toi @" + username + " ?!?!"; },
+    function (username) { return "T'façon t'es une quich au baby @" + username + " !!"; },
+    function (username) { return "NULL @" + username + " !!!"; },
+    function (username) { return "Tu n'es plus inscrit @" + username + " !"; },
+    function (username) { return "@" + username + " LOSER!!!"; },
+    function (username) { return "Du travail, encore du travail! @" + username + " ."; },
+    function (username) { return "Vous êtes... le maillon faible @" + username + " !"; },
+    function (username) { return "Prenez votre sac, récupérez votre flambeau et venez me rejoindre @" + username + " ..."; },
+    function (username) { return "La tribu a décidé de vous éliminer @" + username + " !"; },    
+  ];
+
   var currentPlayers = [];
   var isListeningForPlayers = false;
 
-  robot.hear(/baby.*\?.*/i, function(res) {
+  robot.hear(/baby.*\?.*/i, function (res) {
     var username = res.envelope.user.name;
     isListeningForPlayers = true;
     currentPlayers = [username];
-    res.send("Quelqu'un a parlé de baby :soccer: ? @here Répondez (moi, oui ou +1) pour participer !\n@" + username + ' est inscrit !');
+    res.send("Quelqu'un a parlé de baby :soccer: ? @here Répondez (moi, oui +1, non ou -1) pour participer ou vous désinscrire !\n@" + username + ' est inscrit !');
   });
 
-  robot.hear(/moi|oui|\+1/i, function(res) {
+  robot.hear(/moi|oui|\+1/i, function (res) {
     if (!isListeningForPlayers) {
       return;
     }
@@ -29,55 +42,26 @@ module.exports = function(robot) {
       }
     }
   });
-  
-    
-   robot.hear(/non|\-1/i, function(res) {
+
+  robot.hear(/non|\-1/i, function (res) {
     if (!isListeningForPlayers) {
       return;
     }
-	
-	if (currentPlayers.indexOf(username) !== -1) {
-      currentPlayers.splice(indexOf(username), 1);
-    }
 
     var username = res.envelope.user.name;
-    var rand = Math.floor((Math.random() * 10) + 1);
-    
-    switch(rand){
-            case "1" :
-				 res.send("Ca tombe bien, on voulait pas de toi! @" + username + " . Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "2" :
-				 res.send("Non mais tu croyais qu'on voulait jouer avec toi @" + username + " ?!?! Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "3" :
-				 res.send("T'façon t'es une quich au baby @" + username + " !! Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "4" :
-				 res.send("NULL @" + username + " !!!");
-				 break;
-            case "5" :
-				 res.send("Tu n'es plus inscrit @" + username + " ! Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "6" :
-				 res.send("@" + username + " LOSER!!! Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "7" :
-				 res.send("Du travail, encore du travail! @" + username + " . Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "8" :
-				 res.send("Vous êtes... le maillon faible @" + username + " ! Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "9" :
-				 res.send("Prenez votre sac, récupérez votre flambeau et venez me rejoindre @" + username + " ... Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-            case "10" :
-				 res.send("La tribu a décidé de vous éliminer @" + username + " ! Il reste " + (4 - currentPlayers.length) + " place(s) !");
-				 break;
-			default:
-				res.send("Ca tombe bien, on voulait pas de toi! @" + username + " ! Il reste " + (4 - currentPlayers.length) + " place(s) !");
-	}
+    var playerIdx = currentPlayers.indexOf(username);
+    var leftMessage = null;
 
-   });
-   
+    if (playerIdx !== -1) {
+      currentPlayers.splice(playerIdx, 1);
+      leftMessage = " Il reste " + (4 - currentPlayers.length) + " place(s) !";
+    } else {
+      leftMessage = " De toute manière, tu n'étais pas inscrit boulet...";
+    }
+
+    var rand = Math.floor((Math.random() * leaveMessages.length));
+
+    res.send(leaveMessages[rand](username) + leftMessage);
+  });
+
 }

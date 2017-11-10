@@ -18,6 +18,10 @@ Then add **hubot-babyfoot** to your `external-scripts.json`:
 ]
 ```
 
+## Local tests
+
+`npm start`
+
 ## Sample Interaction
 
 ```
